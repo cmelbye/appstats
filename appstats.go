@@ -184,13 +184,7 @@ func (c Context) Save() {
 		Value: buf_full.Bytes(),
 	}
 
-	c.Infof("Saved; %s: %s, %s: %s, link: %v",
-		item_part.Key,
-		ByteSize(len(item_part.Value)),
-		item_full.Key,
-		ByteSize(len(item_full.Value)),
-		c.URL(),
-	)
+	c.Infof("RPC stats: %s", c.URL())
 
 	nc := context(c.req)
 	memcache.SetMulti(nc, []*memcache.Item{item_part, item_full})
