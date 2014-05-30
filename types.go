@@ -28,8 +28,8 @@ import (
 
 const (
 	keyPrefix = "__appstats__:"
-	keyPart   = keyPrefix + "%06d:part"
-	keyFull   = keyPrefix + "%06d:full"
+	keyPart   = keyPrefix + "%s:part"
+	keyFull   = keyPrefix + "%s:full"
 	distance  = 100
 	modulus   = 1000
 )
@@ -41,6 +41,7 @@ type RequestStats struct {
 	Path, Query string
 	Status      int
 	Cost        int64
+	RequestID   string
 	Start       time.Time
 	Duration    time.Duration
 	RPCStats    []RPCStat
@@ -57,13 +58,11 @@ type stats_full struct {
 }
 
 func (r RequestStats) PartKey() string {
-	t := roundTime(r.Start.Nanosecond())
-	return fmt.Sprintf(keyPart, t)
+	return fmt.Sprintf(keyPart, r.RequestID)
 }
 
 func (r RequestStats) FullKey() string {
-	t := roundTime(r.Start.Nanosecond())
-	return fmt.Sprintf(keyFull, t)
+	return fmt.Sprintf(keyFull, r.RequestID)
 }
 
 func roundTime(i int) int {

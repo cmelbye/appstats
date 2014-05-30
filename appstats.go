@@ -122,12 +122,13 @@ func NewContext(req *http.Request) Context {
 		Context: c,
 		req:     req,
 		Stats: &RequestStats{
-			User:   uname,
-			Admin:  admin,
-			Method: req.Method,
-			Path:   req.URL.Path,
-			Query:  req.URL.RawQuery,
-			Start:  time.Now(),
+			User:      uname,
+			Admin:     admin,
+			Method:    req.Method,
+			Path:      req.URL.Path,
+			Query:     req.URL.RawQuery,
+			RequestID: appengine.RequestID(c),
+			Start:     time.Now(),
 		},
 	}
 }
@@ -200,7 +201,7 @@ func (c Context) URL() string {
 		Scheme:   "http",
 		Host:     c.req.Host,
 		Path:     detailsURL,
-		RawQuery: fmt.Sprintf("time=%v", c.Stats.Start.Nanosecond()),
+		RawQuery: fmt.Sprintf("rid=%s", c.Stats.RequestID),
 	}
 
 	return u.String()
