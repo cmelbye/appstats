@@ -92,8 +92,12 @@ func (c Context) Call(service, method string, in, out appengine_internal.ProtoMe
 	}
 	err := c.Context.Call(service, method, in, out, opts)
 	stat.Duration = time.Since(stat.Start)
-	stat.In = in.String()
-	stat.Out = out.String()
+
+	if service != "urlfetch" || method != "Fetch" {
+		stat.In = in.String()
+		stat.Out = out.String()
+	}
+
 	stat.Cost = GetCost(out)
 
 	if len(stat.In) > ProtoMaxBytes {
