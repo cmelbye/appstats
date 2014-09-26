@@ -26,10 +26,12 @@ import (
 	"runtime/debug"
 	"time"
 
-	"appengine"
-	"appengine/memcache"
-	"appengine/user"
-	"appengine_internal"
+	"code.google.com/p/goprotobuf/proto"
+
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/internal"
+	"google.golang.org/appengine/memcache"
+	"google.golang.org/appengine/user"
 )
 
 var (
@@ -75,7 +77,7 @@ type Context struct {
 	Stats *RequestStats
 }
 
-func (c Context) Call(service, method string, in, out appengine_internal.ProtoMessage, opts *appengine_internal.CallOptions) error {
+func (c Context) Call(service, method string, in, out proto.Message, opts *internal.CallOptions) error {
 	c.Stats.wg.Add(1)
 	defer c.Stats.wg.Done()
 
